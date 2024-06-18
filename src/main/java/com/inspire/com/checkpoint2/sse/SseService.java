@@ -36,19 +36,20 @@ public class SseService {
 
     // @Scheduled(fixedRate = 1000)
     public void sendEvents() {
-        for (SseEmitter emitter : emitters) {
+        emittersMap.forEach((emitter, value) ->  {
             try {
-                emitter.send("lol " + System.currentTimeMillis());
+                value.send("lol " + System.currentTimeMillis());
             } catch (IOException e) {
-                emitter.complete();
-                emitters.remove(emitter);
+                value.complete();
+                emittersMap.remove(emitter);
             }
         }
+        );
     }
 
     public void sendEvents(String email) {
             try {
-                emittersMap.get(email).send("lol " + System.currentTimeMillis());
+                emittersMap.get(email).send(" Message recu à  " + System.currentTimeMillis()  );
             } catch (IOException e) {
                 emittersMap.get(email).complete();
                 emittersMap.remove(email);
